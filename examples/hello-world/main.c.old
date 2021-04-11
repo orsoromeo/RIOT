@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 2014 Freie Universität Berlin
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser
+ * General Public License v2.1. See the file LICENSE in the top level
+ * directory for more details.
+ */
+
+/**
+ * @ingroup     examples
+ * @{
+ *
+ * @file
+ * @brief       Hello World application
+ *
+ * @author      Kaspar Schleiser <kaspar@schleiser.de>
+ * @author      Ludwig Knüpfer <ludwig.knuepfer@fu-berlin.de>
+ *
+ * @}
+ */
+
+#include <stdio.h>
+#include "periph/gpio.h"
+#include "xtimer.h"
+#include "board.h"
+
+int main(void)
+{
+    puts("Hello World!");
+
+    printf("You are running RIOT on a(n) %s board.\n", RIOT_BOARD);
+    printf("This board features a(n) %s MCU.\n", RIOT_MCU);
+    gpio_t pin;
+    pin = GPIO_PIN(1,7);
+    gpio_init(pin, GPIO_OUT);
+    uint64_t start = 0, end = 0;
+    double start_d = 0.0;
+    while(true){
+	    gpio_set(pin);
+	    printf("LED ON\n");
+	    start =xtimer_now_usec64();
+	    start_d = ((double)start)/1000.0;
+ 	    printf("LED OFF, start=%f\n", (float)start_d);
+	    //xtimer_usleep(300000);
+	    end = xtimer_now_usec64();
+	    printf("LED OFF, end=%llu\n", end);
+	    gpio_clear(pin);
+	    printf("LED OFF, dt=%llu\n", end-start);
+	    xtimer_usleep(300000);
+    }
+    return 0;
+}
